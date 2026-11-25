@@ -1,91 +1,67 @@
-import { Button } from "@/components/ui/button"
-import { FcGoogle } from "react-icons/fc"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Separator } from "@/components/ui/separator"
-import { FaGithub } from "react-icons/fa";
-import { SignInFlow } from "../types"
-import { useState } from "react"
+"use client";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import type { SignInFlow } from "../types";
+import { AuthCardShell, AuthSocialSection } from "./auth-card-shell";
+import AuthField from "./auth-field";
 
 interface SignInCardProps {
-    setState: (state: SignInFlow) => void;
+  setState: (state: SignInFlow) => void;
 }
 
 const SignInCard = ({ setState }: SignInCardProps) => {
-    // States
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-    return (
-        <Card className="w-full h-full p-8">
-            <CardHeader className="px-0 pt-0">
-                <CardTitle>
-                    Login to continue
-                </CardTitle>
-                <CardDescription>
-                    Use your email or another service to continue
-                </CardDescription>
-            </CardHeader>
+  return (
+    <AuthCardShell
+      title="Welcome back"
+      description="Sign in to continue to your workspace."
+      footerPrompt="Don't have an account?"
+      footerAction="Create an account"
+      onFooterAction={() => setState("signUp")}
+    >
+      <form
+        className="space-y-4"
+      >
+        <AuthField
+          id="sign-in-email"
+          name="email"
+          type="email"
+          label="Email"
+          placeholder="you@company.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoComplete="email"
+          inputMode="email"
+          autoCapitalize="none"
+          spellCheck={false}
+          required
+        />
+        <AuthField
+          id="sign-in-password"
+          name="password"
+          type="password"
+          label="Password"
+          placeholder="Enter your password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          autoComplete="current-password"
+          required
+        />
 
-            <CardContent className="space-y-5 px-0 pb-0">
-                <form className="space-y-2.5">
-                    <Input
-                        type="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        disabled={false}
-                        required
-                    />
-                    <Input
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        disabled={false}
-                        required
-                    />
-                    <Button
-                        type="submit"
-                        className="w-full"
-                        size="lg"
-                        disabled={false}
-                    >
-                        Continue
-                    </Button>
-                </form>
+        <Button
+          type="submit"
+          className="mt-1 h-11 w-full rounded-[10px] bg-brand text-[14px] font-medium text-white shadow-[0_10px_24px_-12px_rgba(92,59,88,0.9)] hover:bg-brand-deep focus-visible:border-brand focus-visible:ring-brand/30 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-surface disabled:shadow-none"
+        >
+          Sign in
+        </Button>
+      </form>
 
-                <Separator />
+      <AuthSocialSection />
+    </AuthCardShell>
+  );
+};
 
-                <div className="flex flex-col gap-y-2.5">
-                    <Button
-                        className="w-full relative"
-                        size="lg"
-                        variant="outline"
-                        onClick={() => { }}
-                        disabled={false}
-                    >
-                        <FcGoogle className="size-5" />
-                        Continue with Google
-                    </Button>
-                    <Button
-                        className="w-full relative"
-                        size="lg"
-                        variant="outline"
-                        onClick={() => { }}
-                        disabled={false}
-                    >
-                        <FaGithub className="size-4.5" />
-                        Continue with GitHub
-                    </Button>
-                </div>
-
-                <p className="text-xs text-muted-foreground">
-                    Don&apos;t have an account? <button type="button" className="text-sky-700 hover:underline cursor-pointer" onClick={() => setState("signUp")}>Sign up</button>
-                </p>
-            </CardContent>
-        </Card>
-    )
-}
-
-export default SignInCard
+export default SignInCard;

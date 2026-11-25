@@ -1,100 +1,83 @@
-import { Button } from "@/components/ui/button"
-import { FcGoogle } from "react-icons/fc"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Separator } from "@/components/ui/separator"
-import { FaGithub } from "react-icons/fa";
-import { SignInFlow } from "../types"
-import { useState } from "react"
+"use client";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import type { SignInFlow } from "../types";
+import { AuthCardShell, AuthSocialSection } from "./auth-card-shell";
+import AuthField from "./auth-field";
 
 interface SignUpCardProps {
-    setState: (state: SignInFlow) => void;
+  setState: (state: SignInFlow) => void;
 }
 
 const SignUpCard = ({ setState }: SignUpCardProps) => {
-    // States
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-    return (
-        <Card className="w-full h-full p-8">
-            <CardHeader className="px-0 pt-0">
-                <CardTitle>
-                    Sign up to continue
-                </CardTitle>
-                <CardDescription>
-                    Use your email or another service to continue
-                </CardDescription>
-            </CardHeader>
+  const passwordsMismatch = confirmPassword.length > 0 && password !== confirmPassword;
 
-            <CardContent className="space-y-5 px-0 pb-0">
-                <form className="space-y-2.5">
-                    <Input
-                        type="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        disabled={false}
-                        required
-                    />
-                    <Input
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        disabled={false}
-                        required
-                    />
-                    <Input
-                        type="password"
-                        placeholder="Confirm Password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        disabled={false}
-                        required
-                    />
-                    <Button
-                        type="submit"
-                        className="w-full"
-                        size="lg"
-                        disabled={false}
-                    >
-                        Continue
-                    </Button>
-                </form>
+  return (
+    <AuthCardShell
+      title="Create your account"
+      description="Use your email or another service to get started."
+      footerPrompt="Already have an account?"
+      footerAction="Sign in"
+      onFooterAction={() => setState("signIn")}
+    >
+      <form
+        className="space-y-4"
+      >
+        <AuthField
+          id="sign-up-email"
+          name="email"
+          type="email"
+          label="Email"
+          placeholder="you@company.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoComplete="email"
+          inputMode="email"
+          autoCapitalize="none"
+          spellCheck={false}
+          required
+        />
+        <AuthField
+          id="sign-up-password"
+          name="password"
+          type="password"
+          label="Password"
+          placeholder="Create a password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          autoComplete="new-password"
+          required
+        />
+        <AuthField
+          id="sign-up-confirm-password"
+          name="confirmPassword"
+          type="password"
+          label="Confirm password"
+          placeholder="Re-enter your password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          autoComplete="new-password"
+          error={passwordsMismatch ? "Passwords don't match." : undefined}
+          required
+        />
 
-                <Separator />
+        <Button
+          type="submit"
+          disabled={passwordsMismatch}
+          className="mt-1 h-11 w-full rounded-[10px] bg-brand text-[14px] font-medium text-white shadow-[0_10px_24px_-12px_rgba(92,59,88,0.9)] hover:bg-brand-deep focus-visible:border-brand focus-visible:ring-brand/30 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-surface disabled:shadow-none"
+        >
+          Create account
+        </Button>
+      </form>
 
-                <div className="flex flex-col gap-y-2.5">
-                    <Button
-                        className="w-full relative"
-                        size="lg"
-                        variant="outline"
-                        onClick={() => { }}
-                        disabled={false}
-                    >
-                        <FcGoogle className="size-5" />
-                        Continue with Google
-                    </Button>
-                    <Button
-                        className="w-full relative"
-                        size="lg"
-                        variant="outline"
-                        onClick={() => { }}
-                        disabled={false}
-                    >
-                        <FaGithub className="size-4.5" />
-                        Continue with GitHub
-                    </Button>
-                </div>
+      <AuthSocialSection />
+    </AuthCardShell>
+  );
+};
 
-                <p className="text-xs text-muted-foreground">
-                    Already have an account? <button type="button" className="text-sky-700 hover:underline cursor-pointer" onClick={() => setState("signIn")}>Sign in</button>
-                </p>
-            </CardContent>
-        </Card>
-    )
-}
-
-export default SignUpCard
+export default SignUpCard;

@@ -1,6 +1,8 @@
+import AuthScreen from "@/features/auth/components/auth-screen"
+
 const Home = () => {
   return (
-    <div>Home</div>
+    <AuthScreen />
   )
 }
 
